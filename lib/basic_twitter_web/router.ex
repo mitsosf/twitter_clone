@@ -18,6 +18,13 @@ defmodule BasicTwitterWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/tweets", TweetLive.Index, :index
+    live "/tweets/new", TweetLive.Index, :new
+    live "/tweets/:id/edit", TweetLive.Index, :edit
+
+    live "/tweets/:id", TweetLive.Show, :show
+    live "/tweets/:id/show/edit", TweetLive.Show, :edit
+
   end
 
   # Other scopes may use custom stacks.
