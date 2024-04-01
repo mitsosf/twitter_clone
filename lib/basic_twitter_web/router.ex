@@ -17,7 +17,7 @@ defmodule BasicTwitterWeb.Router do
   scope "/", BasicTwitterWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", TweetLive.Index, :index
     live "/tweets", TweetLive.Index, :index
     live "/tweets/new", TweetLive.Index, :new
     live "/tweets/:id/edit", TweetLive.Index, :edit

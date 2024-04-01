@@ -14,8 +14,8 @@ defmodule BasicTwitter.Timeline.Tweet do
   @doc false
   def changeset(tweet, attrs) do
     tweet
-    |> cast(attrs, [:content])
-    |> validate_required([:content])
+    |> cast(attrs, [:content, :likes, :retweets])
+    |> validate_required([:content, :likes, :retweets])
     |> validate_length(:content, min: 1, max: 280)
   end
 end

@@ -39,6 +39,11 @@ defmodule BasicTwitterWeb.TweetLive.Index do
   end
 
   @impl true
+  def handle_info({:tweet_updated, tweet}, socket) do
+    {:noreply, stream_insert(socket, :tweets, tweet)}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     tweet = Timeline.get_tweet!(id)
     {:ok, _} = Timeline.delete_tweet(tweet)
