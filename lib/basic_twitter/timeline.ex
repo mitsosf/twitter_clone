@@ -18,7 +18,7 @@ defmodule BasicTwitter.Timeline do
 
   """
   def list_tweets do
-    Repo.all(Tweet)
+    Repo.all(from t in Tweet, order_by: [desc: t.id])
   end
 
   @doc """
@@ -53,6 +53,7 @@ defmodule BasicTwitter.Timeline do
     %Tweet{}
     |> Tweet.changeset(attrs)
     |> Repo.insert()
+    |> broadcast(:saved)
   end
 
   @doc """
@@ -71,6 +72,7 @@ defmodule BasicTwitter.Timeline do
     tweet
     |> Tweet.changeset(attrs)
     |> Repo.update()
+    |> broadcast(:tweet_updated)
   end
 
   @doc """
@@ -100,5 +102,15 @@ defmodule BasicTwitter.Timeline do
   """
   def change_tweet(%Tweet{} = tweet, attrs \\ %{}) do
     Tweet.changeset(tweet, attrs)
+  end
+
+  def subscribe do
+    Phoenix.PubSub.subscribe(BasicTwitter.PubSub, "tweets")
+  end
+
+  defp broadcast({:error, _reason} = error, _event), do: error
+  defp broadcast({:ok, tweet}, event) do
+    Phoenix.PubSub.broadcast(BasicTwitter.PubSub, "tweets", {event, tweet})
+    {:ok, tweet}
   end
 end

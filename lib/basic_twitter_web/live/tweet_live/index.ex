@@ -6,6 +6,7 @@ defmodule BasicTwitterWeb.TweetLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    if connected?(socket), do: Timeline.subscribe()
     {:ok, stream(socket, :tweets, Timeline.list_tweets())}
   end
 
